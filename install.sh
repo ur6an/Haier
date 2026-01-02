@@ -159,7 +159,7 @@ mv /opt/users.json /opt/haier/
 mv /opt/schedule_ch.json /opt/haier/
 mv /opt/schedule_dhw.json /opt/haier/
 
-rm /opt/HAIER* 
+#rm /opt/HAIER* 
 rm -rf /opt/haier/static
 rm -rf /opt/haier/templates
 rm /opt/haier/main.py
