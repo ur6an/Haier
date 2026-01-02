@@ -158,6 +158,7 @@ curl -sL https://gitea.haierpi.pl/api/packages/haierpi/generic/haierpi/v1.4beta1
 mv /opt/users.json /opt/haier/
 mv /opt/schedule_ch.json /opt/haier/
 mv /opt/schedule_dhw.json /opt/haier/
+cp /opt/haier.backup/charts.pkl /opt/haier/
 
 #rm /opt/HAIER* 
 rm -rf /opt/haier/static
