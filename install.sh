@@ -4,7 +4,7 @@
 #            KONFIGURACJA
 # =============================================================
 PARTYCJA="/opt"
-WYMAGANE_WOLNE_MIEJSCE_MB=180
+WYMAGANE_WOLNE_MIEJSCE_MB=100
 KATALOG_DO_PRZESZUKANIA_ETAP1="/opt"
 WYKLUCZENIE_ETAP1="/opt/haier"
 KATALOG_DO_PRZESZUKANIA_ETAP2="/opt/haier/env"
