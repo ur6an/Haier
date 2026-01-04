@@ -19,4 +19,4 @@ echo "Podmiana zakończona"
 echo "Startuje usługę Haier..."
 systemctl start haier && echo "✅ OK: USŁUGA WYSTARTOWAŁĄ" || echo "⚠️ UWAGA: Wystąpił błąd podczas startu usługi."
 
-fi
+
