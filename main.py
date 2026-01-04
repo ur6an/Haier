@@ -1792,92 +1792,92 @@ def GetParameters():
     if str(statusdict.get("defrost", {}).get("value", "off")).strip().lower() != "on":
         if insidetemp == 'builtin' or humidity == 'builtin':
             threading.Thread(target=GetDHT22, daemon=True).start()
-            threading.Thread(target=GetInsideTemp, args=(insidetemp,), daemon=True).start()
-            threading.Thread(target=GetOutsideTemp, args=(outsidetemp,), daemon=True).start()
-            threading.Thread(target=GetHumidity, args=(humidity,), daemon=True).start()
-            threading.Thread(target=hpiapp, daemon=True).start()
-            now=datetime.now().strftime("%d %b %H:%M:%S")
-            datechart.append(str(now))
-            tank=statusdict['tank']['value']
-            twitwo=statusdict['twitwo']['value']
-            thitho=statusdict['thitho']['value']
-            pump=statusdict['pump']['value']
-            threeway=statusdict['threeway']['value']
-            mode=statusdict['mode']['value']
-            dhwkwhpd=statusdict['dhwkwhpd']['value']
-            chkwhpd=statusdict['chkwhpd']['value']
-            tdts=statusdict['tdts']['value']
-            archerror=statusdict['archerror']['value']
-            compinfo=compinfo=statusdict['compinfo']['value']
-            preset=statusdict['mode']['value']
-            pdps=statusdict['pdps']['value']
-            eevlevel=statusdict['eevlevel']['value']
-            tsatpd=statusdict['tsatpd']['value']
-            tsatps=statusdict['tsatps']['value']
-            fans=statusdict['fans']['value']
-            tao=statusdict['tao']['value']
-            dhw=statusdict['dhw']['value']
-            intemp=statusdict['intemp']['value']
-            outtemp=statusdict['outtemp']['value']
-            humid=statusdict['humid']['value']
-            hcurve=statusdict['hcurve']['value']
-            flimiton_gpio = str(GPIO.input(freqlimitpin))
-            ischanged("flimiton", flimiton_gpio)
-            flimiton=statusdict['flimiton']['value']
-            threeway=statusdict['threeway']['value']
-            if mode == "quiet":
-                mode_q=1
-                mode_e=0
-                mode_t=0
-            elif mode == "eco":
-                mode_q=0
-                mode_e=2
-                mode_t=0
-            elif mode == "turbo":
-                mode_q=0
-                mode_e=0
-                mode_t=3
-            else:
-                mode_q=0
-                mode_e=0
-                mode_t=0
-            tankchart.append(tank)
-            twichart.append(twitwo[0])
-            twochart.append(twitwo[1])
-            thichart.append(thitho[0])
-            thochart.append(thitho[1])
-            modechart_quiet.append(mode_q)
-            modechart_eco.append(mode_e)
-            modechart_turbo.append(mode_t)
-            tdchart.append(tdts[0])
-            tschart.append(tdts[1])
-            factchart.append(compinfo[0])
-            fsetchart.append(compinfo[1])
-            pdsetchart.append(pdps[0])
-            pdactchart.append(pdps[1])
-            pssetchart.append(pdps[2])
-            psactchart.append(pdps[3])
-            eevlevelchart.append(eevlevel)
-            tsatpdsetchart.append(tsatpd[0])
-            tsatpdactchart.append(tsatpd[1])
-            tsatpssetchart.append(tsatps[0])
-            tsatpsactchart.append(tsatps[1])
-            taochart.append(tao)
-            intempchart.append(intemp)
-            outtempchart.append(outtemp)
-            humidchart.append(humid)
-            hcurvechart.append(hcurve)
-            flimitonchart.append(flimiton)
-            threewaychart.append(threeway)
-            socketlocal.emit("chart_update", {'datechart': str(now), 'tankchart': tank, 'twichart': twitwo[0], 'twochart': twitwo[1], 'thichart': thitho[0], 'thochart': thitho[1], 'taochart': tao, 'tdchart': tdts[0], 'tschart': tdts[1], 'pdsetchart': pdps[0], 'pdactchart': pdps[1], 'pssetchart': pdps[2], 'psactchart': pdps[3], 'intempchart': statusdict['intemp']['value'], 'outtempchart': statusdict['outtemp']['value'], 'humidchart': statusdict['humid']['value'], 'hcurvechart': statusdict['hcurve']['value'], 'factchart': compinfo[0], 'fsetchart': compinfo[1], 'flimitonchart': statusdict['flimiton']['value']*2, 'modechart_quiet': mode_q, 'modechart_eco': mode_e, 'modechart_turbo': mode_t, 'threewaychart': threeway })
-            deltacheck(twitwo)
-            flimitreset()
-            scheduler()
-            if isinstance(compinfo, list) and len(compinfo) > 0:
-                if dhwwl == "1" and compinfo[0] > 0 and threeway == "DHW" and (flimiton == "1" or preset != "turbo"):
-                    logging.info("DHWWL Function ON")
-                    flimitchange("0")
-                    new_presetchange("turbo")
+        threading.Thread(target=GetInsideTemp, args=(insidetemp,), daemon=True).start()
+        threading.Thread(target=GetOutsideTemp, args=(outsidetemp,), daemon=True).start()
+        threading.Thread(target=GetHumidity, args=(humidity,), daemon=True).start()
+        threading.Thread(target=hpiapp, daemon=True).start()
+        now=datetime.now().strftime("%d %b %H:%M:%S")
+        datechart.append(str(now))
+        tank=statusdict['tank']['value']
+        twitwo=statusdict['twitwo']['value']
+        thitho=statusdict['thitho']['value']
+        pump=statusdict['pump']['value']
+        threeway=statusdict['threeway']['value']
+        mode=statusdict['mode']['value']
+        dhwkwhpd=statusdict['dhwkwhpd']['value']
+        chkwhpd=statusdict['chkwhpd']['value']
+        tdts=statusdict['tdts']['value']
+        archerror=statusdict['archerror']['value']
+        compinfo=compinfo=statusdict['compinfo']['value']
+        preset=statusdict['mode']['value']
+        pdps=statusdict['pdps']['value']
+        eevlevel=statusdict['eevlevel']['value']
+        tsatpd=statusdict['tsatpd']['value']
+        tsatps=statusdict['tsatps']['value']
+        fans=statusdict['fans']['value']
+        tao=statusdict['tao']['value']
+        dhw=statusdict['dhw']['value']
+        intemp=statusdict['intemp']['value']
+        outtemp=statusdict['outtemp']['value']
+        humid=statusdict['humid']['value']
+        hcurve=statusdict['hcurve']['value']
+        flimiton_gpio = str(GPIO.input(freqlimitpin))
+        ischanged("flimiton", flimiton_gpio)
+        flimiton=statusdict['flimiton']['value']
+        threeway=statusdict['threeway']['value']
+        if mode == "quiet":
+            mode_q=1
+            mode_e=0
+            mode_t=0
+        elif mode == "eco":
+            mode_q=0
+            mode_e=2
+            mode_t=0
+        elif mode == "turbo":
+            mode_q=0
+            mode_e=0
+            mode_t=3
+        else:
+            mode_q=0
+            mode_e=0
+            mode_t=0
+        tankchart.append(tank)
+        twichart.append(twitwo[0])
+        twochart.append(twitwo[1])
+        thichart.append(thitho[0])
+        thochart.append(thitho[1])
+        modechart_quiet.append(mode_q)
+        modechart_eco.append(mode_e)
+        modechart_turbo.append(mode_t)
+        tdchart.append(tdts[0])
+        tschart.append(tdts[1])
+        factchart.append(compinfo[0])
+        fsetchart.append(compinfo[1])
+        pdsetchart.append(pdps[0])
+        pdactchart.append(pdps[1])
+        pssetchart.append(pdps[2])
+        psactchart.append(pdps[3])
+        eevlevelchart.append(eevlevel)
+        tsatpdsetchart.append(tsatpd[0])
+        tsatpdactchart.append(tsatpd[1])
+        tsatpssetchart.append(tsatps[0])
+        tsatpsactchart.append(tsatps[1])
+        taochart.append(tao)
+        intempchart.append(intemp)
+        outtempchart.append(outtemp)
+        humidchart.append(humid)
+        hcurvechart.append(hcurve)
+        flimitonchart.append(flimiton)
+        threewaychart.append(threeway)
+        socketlocal.emit("chart_update", {'datechart': str(now), 'tankchart': tank, 'twichart': twitwo[0], 'twochart': twitwo[1], 'thichart': thitho[0], 'thochart': thitho[1], 'taochart': tao, 'tdchart': tdts[0], 'tschart': tdts[1], 'pdsetchart': pdps[0], 'pdactchart': pdps[1], 'pssetchart': pdps[2], 'psactchart': pdps[3], 'intempchart': statusdict['intemp']['value'], 'outtempchart': statusdict['outtemp']['value'], 'humidchart': statusdict['humid']['value'], 'hcurvechart': statusdict['hcurve']['value'], 'factchart': compinfo[0], 'fsetchart': compinfo[1], 'flimitonchart': statusdict['flimiton']['value']*2, 'modechart_quiet': mode_q, 'modechart_eco': mode_e, 'modechart_turbo': mode_t, 'threewaychart': threeway })
+        deltacheck(twitwo)
+        flimitreset()
+        scheduler()
+        if isinstance(compinfo, list) and len(compinfo) > 0:
+            if dhwwl == "1" and compinfo[0] > 0 and threeway == "DHW" and (flimiton == "1" or preset != "turbo"):
+                logging.info("DHWWL Function ON")
+                flimitchange("0")
+                new_presetchange("turbo")
         """    if len(R141) == 16:
                 tank = PyHaier.GetDHWCurTemp(R141)
                 twitwo = PyHaier.GetTwiTwo(R141)
@@ -2717,7 +2717,7 @@ def configure_ha_mqtt_discovery():
     configure_sensor("Delta Temp FLimit", mqtt_topic + "/details/deltatempflimit/state", "HaierPi_DeltaTempFLimit", "°C", "temperature", "measurement", "{{ value_json | float }}")
     configure_sensor("Delta Temp Quiet", mqtt_topic + "/details/deltatempquiet/state", "HaierPi_DeltaTempQuiet", "°C", "temperature", "measurement", "{{ value_json | float }}")
     configure_sensor("Delta Temp Turbo", mqtt_topic + "/details/deltatempturbo/state", "HaierPi_DeltaTempTurbo", "°C", "temperature", "measurement", "{{ value_json | float }}")
-    configure_sensor("Delta Temp Eco", mqtt_topic + "/details/deltatempeco/state", "HaierPi_DeltaTempEco", "°C", "temperature", "measurement", "{{ value_json | float }}")
+    #configure_sensor("Delta Temp Eco", mqtt_topic + "/details/deltatempeco/state", "HaierPi_DeltaTempEco", "°C", "temperature", "measurement", "{{ value_json | float }}")
     configure_sensor("Anti On-Off Delta Time", mqtt_topic + "/details/antionoffdeltatime/state", "HaierPi_AntiOnOffDeltaTime", "min", "duration", "measurement", "{{ value_json | float }}")
     configure_sensor("Compressor fact",mqtt_topic + "/details/compinfo/state","HaierPi_Compfact","Hz", "frequency","measurement", "{{ value_json[0] | float}}")
     configure_sensor("Compressor fset",mqtt_topic + "/details/compinfo/state","HaierPi_Compfset","Hz", "frequency","measurement", "{{ value_json[1] | float}}")
