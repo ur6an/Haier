@@ -14,6 +14,7 @@ rm -rf /opt/haier/templates
 rm /opt/haier/main.py
 cd /opt/haier
 curl -sL https://github.com/ur6an/Haier/raw/refs/heads/main/fixV4.1.4.tar.gz |tar -xzv
+cp /opt/config.ini /opt/config.ini.backup
 
 echo "Podmiana zakończona"
 
