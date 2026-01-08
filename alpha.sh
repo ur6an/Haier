@@ -36,19 +36,12 @@ fi
 echo
 read -p "Czy korzystasz z CWU? [t/n]: " -n 1 -r answer < /dev/tty
 echo
-    case "$answer" in
-        [Tt][Aa][Kk]|[Tt]|[Yy]|[Yy][Ee][Ss])
-            VALUE=1
-            break
-            ;;
-        [Nn][Ii][Ee]|[Nn]|[Nn][Oo])
-            VALUE=0
-            break
-            ;;
-        *)
-            echo "Proszę odpowiedzieć: tak lub nie"
-            ;;
-    esac
+
+if [[ "$answer" =~ ^[Tt]$ ]]; then
+    VALUE=1
+else
+    VALUE=0
+fi
 
 # Dodanie wpisu po [SETTINGS]
 awk -v val="$VALUE" '
