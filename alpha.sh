@@ -28,9 +28,12 @@ fi
 
 # Sprawdzenie czy wpis już istnieje
 if grep -Eq '^[[:space:]]*dhwuse[[:space:]]*=[[:space:]]*[01]' "$FILE"; then
-    exit 0
+    ZAKONCZ=1
+    echo "Wpis cwu istnieje"
 fi
 
+if (( ZAKONCZ != 1 )); then
+echo "Wpis cwu nieistnieje"
 # Pytanie do użytkownika
 
 echo
@@ -52,6 +55,6 @@ awk -v val="$VALUE" '
 }
 { print }
 ' "$FILE" > "${FILE}.tmp" && mv "${FILE}.tmp" "$FILE"
-
+fi
 echo "Startuje usługę Haier..."
 systemctl start haier && echo "✅ OK: USŁUGA WYSTARTOWAŁĄ" || echo "⚠️ UWAGA: Wystąpił błąd podczas startu usługi."
