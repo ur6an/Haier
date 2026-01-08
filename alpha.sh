@@ -33,7 +33,7 @@ if grep -Eq '^[[:space:]]*dhwuse[[:space:]]*=[[:space:]]*[01]' "$FILE"; then
 fi
 
 if (( ZAKONCZ != 1 )); then
-echo "Wpis cwu nieistnieje"
+echo "Wpis cwu nie istnieje"
 # Pytanie do użytkownika
 
 echo
