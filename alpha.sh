@@ -32,8 +32,10 @@ if grep -Eq '^[[:space:]]*dhwuse[[:space:]]*=[[:space:]]*[01]' "$FILE"; then
 fi
 
 # Pytanie do użytkownika
-while true; do
-    read -rp "Czy korzystasz z CWU? (tak/nie): " answer
+
+echo
+read -p "Czy korzystasz z CWU? [t/n]: " -n 1 -r answer < /dev/tty
+echo
     case "$answer" in
         [Tt][Aa][Kk]|[Tt]|[Yy]|[Yy][Ee][Ss])
             VALUE=1
@@ -47,7 +49,6 @@ while true; do
             echo "Proszę odpowiedzieć: tak lub nie"
             ;;
     esac
-done
 
 # Dodanie wpisu po [SETTINGS]
 awk -v val="$VALUE" '
