@@ -165,7 +165,7 @@ rm -rf /opt/haier/static
 rm -rf /opt/haier/templates
 rm /opt/haier/main.py
 cd /opt/haier
-curl -sL https://github.com/ur6an/Haier/raw/refs/heads/main/fixV4.1.3.tar.gz |tar -xz
+curl -sL https://github.com/ur6an/Haier/raw/refs/heads/main/fixV4.1.4.tar.gz |tar -xz
 #rm /opt/haier/fixV4.tar.gz
 
 
