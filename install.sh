@@ -160,14 +160,57 @@ mv /opt/schedule_ch.json /opt/haier/
 mv /opt/schedule_dhw.json /opt/haier/
 cp /opt/haier.backup/charts.pkl /opt/haier/
 
-#rm /opt/HAIER* 
+echo "Wklejam pliki z paczki alpha"
+
+systemctl stop haier
+
 rm -rf /opt/haier/static
 rm -rf /opt/haier/templates
 rm /opt/haier/main.py
 cd /opt/haier
-curl -sL https://github.com/ur6an/Haier/raw/refs/heads/main/fixV4.1.3.tar.gz |tar -xz
-#rm /opt/haier/fixV4.tar.gz
+curl -sL https://github.com/ur6an/Haier/raw/refs/heads/main/fixV4.1.7.tar.gz |tar -xzv
+cp /opt/config.ini /opt/config.ini.backup
 
+echo "Podmiana zakończona"
+
+#Dodawanie wpisu dhw
+FILE="/opt/config.ini"
+
+if [[ ! -f "$FILE" ]]; then
+    echo "Plik $FILE nie istnieje"
+    exit 1
+fi
+
+# Sprawdzenie czy wpis już istnieje
+if grep -Eq '^[[:space:]]*dhwuse[[:space:]]*=[[:space:]]*[01]' "$FILE"; then
+    ZAKONCZ=1
+    echo "Wpis cwu istnieje"
+fi
+
+if (( ZAKONCZ != 1 )); then
+echo "Wpis cwu nie istnieje"
+# Pytanie do użytkownika
+
+echo
+read -p "Czy korzystasz z CWU? [t/n]: " -n 1 -r answer < /dev/tty
+echo
+
+if [[ "$answer" =~ ^[Tt]$ ]]; then
+    VALUE=1
+else
+    VALUE=0
+fi
+
+# Dodanie wpisu po [SETTINGS]
+awk -v val="$VALUE" '
+/^\[SETTINGS\]/ {
+    print
+    print "dhwuse = " val
+    next
+}
+{ print }
+' "$FILE" > "${FILE}.tmp" && mv "${FILE}.tmp" "$FILE"
+fi
 
 echo "✅ OK: Instalacja zakończona"
 echo "Startuje usługę Haier..."
