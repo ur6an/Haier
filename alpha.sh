@@ -56,6 +56,7 @@ awk -v val="$VALUE" '
 { print }
 ' "$FILE" > "${FILE}.tmp" && mv "${FILE}.tmp" "$FILE"
 fi
+ZAKONCZ=0
 # Sprawdzenie czy wpis zone już istnieje
 if grep -Eq '^[[:space:]]*zone_frost_enable[[:space:]]*=[[:space:]]*[01]' "$FILE"; then
     ZAKONCZ=1
