@@ -68,10 +68,10 @@ echo "Wpis zone nie istnieje"
 awk -v val="$VALUE" '
 /^\[SETTINGS\]/ {
     print
-    print "zone_frost_enable = 1"
+    print "zone_frost_enable = 0"
     print "zone_frost_temp = -5"
     print "zone_frost_mode = quiet"
-    print "zone_warm_enable = 1"
+    print "zone_warm_enable = 0"
     print "zone_warm_temp = 10"
     print "zone_warm_mode = quiet_flimit"
     next
