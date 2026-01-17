@@ -160,7 +160,7 @@ mv /opt/schedule_ch.json /opt/haier/
 mv /opt/schedule_dhw.json /opt/haier/
 cp /opt/haier.backup/charts.pkl /opt/haier/
 
-echo "Wklejam pliki z paczki alpha"
+echo "Wklejam pliki z paczki beta"
 
 systemctl stop haier
 
