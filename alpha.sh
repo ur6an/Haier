@@ -13,7 +13,7 @@ rm -rf /opt/haier/static
 rm -rf /opt/haier/templates
 rm /opt/haier/main.py
 cd /opt/haier
-curl -sL https://github.com/ur6an/Haier/raw/refs/heads/main/fixV4.1.8.tar.gz |tar -xzv
+curl -sL https://github.com/ur6an/Haier/raw/refs/heads/main/fixV4.1.9.tar.gz |tar -xzv
 cp /opt/config.ini /opt/config.ini.backup
 
 echo "Podmiana zakończona"
