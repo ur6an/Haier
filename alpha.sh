@@ -26,7 +26,7 @@ if [[ ! -f "$FILE" ]]; then
     exit 1
 fi
 
-# Sprawdzenie czy wpis już istnieje
+# Sprawdzenie czy wpis cwu już istnieje
 if grep -Eq '^[[:space:]]*dhwuse[[:space:]]*=[[:space:]]*[01]' "$FILE"; then
     ZAKONCZ=1
     echo "Wpis cwu istnieje"
@@ -51,6 +51,29 @@ awk -v val="$VALUE" '
 /^\[SETTINGS\]/ {
     print
     print "dhwuse = " val
+    next
+}
+{ print }
+' "$FILE" > "${FILE}.tmp" && mv "${FILE}.tmp" "$FILE"
+fi
+# Sprawdzenie czy wpis zone już istnieje
+if grep -Eq '^[[:space:]]*zone_frost_enable[[:space:]]*=[[:space:]]*[01]' "$FILE"; then
+    ZAKONCZ=1
+    echo "Wpis zone istnieje"
+fi
+
+if (( ZAKONCZ != 1 )); then
+echo "Wpis zone nie istnieje"
+# Dodanie wpisu po [SETTINGS]
+awk -v val="$VALUE" '
+/^\[SETTINGS\]/ {
+    print
+    print "zone_frost_enable = 1"
+    print "zone_frost_temp = -5"
+    print "zone_frost_mode = quiet"
+    print "zone_warm_enable = 1"
+    print "zone_warm_temp = 10"
+    print "zone_warm_mode = quiet_flimit"
     next
 }
 { print }
