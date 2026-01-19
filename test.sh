@@ -80,5 +80,24 @@ awk -v val="$VALUE" '
 { print }
 ' "$FILE" > "${FILE}.tmp" && mv "${FILE}.tmp" "$FILE"
 fi
+ZAKONCZ=0
+# Sprawdzenie czy wpis emergency_intemp już istnieje
+if grep -Eq '^[[:space:]]*emergency_intemp[[:space:]]*=[[:space:]]*[01]' "$FILE"; then
+    ZAKONCZ=1
+    echo "Wpis emergency_intemp istnieje"
+fi
+
+if (( ZAKONCZ != 1 )); then
+echo "Wpis emergency_intemp nie istnieje"
+# Dodanie wpisu po [SETTINGS]
+awk -v val="$VALUE" '
+/^\[SETTINGS\]/ {
+    print
+    print "emergency_intemp = 20.0"
+    next
+}
+{ print }
+' "$FILE" > "${FILE}.tmp" && mv "${FILE}.tmp" "$FILE"
+fi
 echo "Startuje usługę Haier..."
 systemctl start haier && echo "✅ OK: USŁUGA WYSTARTOWAŁA" || echo "⚠️ UWAGA: Wystąpił błąd podczas startu usługi."
