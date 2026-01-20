@@ -86,7 +86,7 @@ fi
 ZAKONCZ=0
 
 # Sprawdzenie czy wpis emergency_intemp już istnieje
-if grep -Eq '^[[:space:]]*emergency_intemp[[:space:]]*=[[:space:]]*[1abc]' "$FILE"; then
+if grep -Eq '^[[:space:]]*emergency_intemp[[:space:]]*=[[:space:]]*' "$FILE"; then
     ZAKONCZ=1
     echo "Wpis emergency_intemp istnieje"
 fi
