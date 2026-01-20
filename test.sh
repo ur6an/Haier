@@ -56,7 +56,9 @@ awk -v val="$VALUE" '
 { print }
 ' "$FILE" > "${FILE}.tmp" && mv "${FILE}.tmp" "$FILE"
 fi
+
 ZAKONCZ=0
+
 # Sprawdzenie czy wpis zone już istnieje
 if grep -Eq '^[[:space:]]*zone_frost_enable[[:space:]]*=[[:space:]]*[01]' "$FILE"; then
     ZAKONCZ=1
@@ -80,9 +82,11 @@ awk -v val="$VALUE" '
 { print }
 ' "$FILE" > "${FILE}.tmp" && mv "${FILE}.tmp" "$FILE"
 fi
+
 ZAKONCZ=0
+
 # Sprawdzenie czy wpis emergency_intemp już istnieje
-if grep -Eq '^[[:space:]]*emergency_intemp[[:space:]]*=[[:space:]]*[01]' "$FILE"; then
+if grep -Eq '^[[:space:]]*emergency_intemp[[:space:]]*=[[:space:]]*[1abc]' "$FILE"; then
     ZAKONCZ=1
     echo "Wpis emergency_intemp istnieje"
 fi
