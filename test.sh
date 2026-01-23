@@ -5,7 +5,7 @@
 #            GŁÓWNA CZĘŚĆ SKRYPTU
 # =============================================================
 
-echo "Wklejam pliki z paczki test 1.4.2a"
+echo "Wklejam pliki z paczki test 1.4.2a1"
 
 systemctl stop haier
 
