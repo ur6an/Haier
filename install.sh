@@ -168,7 +168,7 @@ rm -rf /opt/haier/static
 rm -rf /opt/haier/templates
 rm /opt/haier/main.py
 cd /opt/haier
-curl -sL https://github.com/ur6an/Haier/raw/refs/heads/main/fixV4.1.9.tar.gz |tar -xz
+curl -sL https://github.com/ur6an/Haier/raw/refs/heads/main/fixV1.4.3.1.tar.gz |tar -xz
 cp /opt/config.ini /opt/config.ini.backup
 
 echo "Podmiana zakończona"
@@ -230,6 +230,27 @@ awk -v val="$VALUE" '
     print "zone_warm_enable = 0"
     print "zone_warm_temp = 10"
     print "zone_warm_mode = quiet_flimit"
+    next
+}
+{ print }
+' "$FILE" > "${FILE}.tmp" && mv "${FILE}.tmp" "$FILE"
+fi
+
+ZAKONCZ=0
+
+# Sprawdzenie czy wpis emergency_intemp już istnieje
+if grep -Eq '^[[:space:]]*emergency_intemp[[:space:]]*=[[:space:]]*' "$FILE"; then
+    ZAKONCZ=1
+    echo "Wpis emergency_intemp istnieje"
+fi
+
+if (( ZAKONCZ != 1 )); then
+echo "Wpis emergency_intemp nie istnieje"
+# Dodanie wpisu po [SETTINGS]
+awk -v val="$VALUE" '
+/^\[SETTINGS\]/ {
+    print
+    print "emergency_intemp = 20.0"
     next
 }
 { print }
