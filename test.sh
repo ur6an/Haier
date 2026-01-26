@@ -23,6 +23,7 @@ echo
 
 if [[ "$answer" =~ ^[Tt]$ ]]; then
     echo "Wklejam pliki z paczki Kamila"
+    echo
     curl -sL https://github.com/ur6an/Haier/raw/refs/heads/main/fixV1.4.3_kamil.tar.gz |tar -xz
     echo
 fi
