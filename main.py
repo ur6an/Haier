@@ -2741,9 +2741,9 @@ def GetParameters():
             if _fl_on_now == "1":
                 logging.info("DHWWL: disabling frequency limit for DHW")
                 flimitchange("0")
-            if _mode_now != "eco":
+            if _mode_now != "quiet":
                 logging.info("DHWWL: forcing TURBO for DHW")
-                new_presetchange("eco")
+                new_presetchange("quiet")
 
         elif _dhwwl_active:
             # Restore on exit
