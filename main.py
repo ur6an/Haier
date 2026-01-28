@@ -57,7 +57,7 @@ event = threading.Event()
 HEATDEMAND_OFF_DELAY_S = int(os.getenv("HEATDEMAND_OFF_DELAY_S", "30"))
 heatdemand_hi_since = None
 
-version="1.4.4"
+version="1.4.4u1"
 ip_address=subprocess.run(['hostname', '-I'], check=True, capture_output=True, text=True).stdout.strip()
 welcome="\n┌────────────────────────────────────────┐\n│              "+colored("!!!Warning!!!", "red", attrs=['bold','blink'])+colored("             │\n│      This script is experimental       │\n│                                        │\n│ Products are provided strictly \"as-is\" │\n│ without any other warranty or guaranty │\n│              of any kind.              │\n└────────────────────────────────────────┘\n","yellow", attrs=['bold'])
 
