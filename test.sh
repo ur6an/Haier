@@ -18,14 +18,14 @@ cp /opt/config.ini /opt/config.ini.backup
 
 echo "Podmiana zakończona"
 echo
-#read -p "Czy chcesz skorzystać z interfejsu Kamila? [t/n]: " -n 1 -r answer < /dev/tty
-#echo
+read -p "Czy chcesz skorzystać z interfejsu Kamila? [t/n]: " -n 1 -r answer < /dev/tty
+echo
 
-#if [[ "$answer" =~ ^[Tt]$ ]]; then
-#    echo "Wklejam pliki z paczki Kamila"
-#    curl -sL https://github.com/ur6an/Haier/raw/refs/heads/main/fixV1.4.3_kamil.tar.gz |tar -xz
-#    echo
-#fi
+if [[ "$answer" =~ ^[Tt]$ ]]; then
+    echo "Wklejam pliki z paczki Kamila"
+    curl -sL https://github.com/ur6an/Haier/raw/refs/heads/main/fixV1.4.4_Kamil.tar.gz |tar -xz
+    echo
+fi
 
 #Dodawanie wpisu dhw
 FILE="/opt/config.ini"
