@@ -5,7 +5,7 @@
 #            GŁÓWNA CZĘŚĆ SKRYPTU
 # =============================================================
 
-echo "Wklejam pliki z paczki test 1.4.4.1"
+echo "Wklejam pliki z paczki test 1.4.4.2"
 
 systemctl stop haier
 
@@ -13,7 +13,7 @@ rm -rf /opt/haier/static
 rm -rf /opt/haier/templates
 rm /opt/haier/main.py
 cd /opt/haier
-curl -sL https://github.com/ur6an/Haier/raw/refs/heads/main/fixV1.4.4.1.tar.gz |tar -xz
+curl -sL https://github.com/ur6an/Haier/raw/refs/heads/main/fixV1.4.4.2.tar.gz |tar -xz
 cp /opt/config.ini /opt/config.ini.backup
 
 echo "Podmiana zakończona"
@@ -23,7 +23,7 @@ echo
 
 if [[ "$answer" =~ ^[Tt]$ ]]; then
     echo "Wklejam pliki z paczki Kamila"
-    curl -sL https://github.com/ur6an/Haier/raw/refs/heads/main/fixV1.4.4.1_Kamil.tar.gz |tar -xz
+    curl -sL https://github.com/ur6an/Haier/raw/refs/heads/main/fixV1.4.4.2_Kamil.tar.gz |tar -xz
     echo
 fi
 
