@@ -18,8 +18,8 @@ cp /opt/config.ini /opt/config.ini.backup
 
 echo "Podmiana zakończona"
 echo
-read -p "Czy chcesz skorzystać z interfejsu Kamila? [t/n]: " -n 1 -r answer < /dev/tty
-echo
+#read -p "Czy chcesz skorzystać z interfejsu Kamila? [t/n]: " -n 1 -r answer < /dev/tty
+#echo
 
 #if [[ "$answer" =~ ^[Tt]$ ]]; then
 #    echo "Wklejam pliki z paczki Kamila"
