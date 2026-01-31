@@ -13,10 +13,19 @@ rm -rf /opt/haier/static
 rm -rf /opt/haier/templates
 rm /opt/haier/main.py
 cd /opt/haier
-curl -sL https://github.com/ur6an/Haier/raw/refs/heads/main/fixV1.4.3.1.tar.gz |tar -xz
+curl -sL https://github.com/ur6an/Haier/raw/refs/heads/main/fixV1.4.3.2.tar.gz |tar -xz
 cp /opt/config.ini /opt/config.ini.backup
 
 echo "Podmiana zakończona"
+echo
+read -p "Czy chcesz skorzystać z interfejsu Kamila? [t/n]: " -n 1 -r answer < /dev/tty
+echo
+
+if [[ "$answer" =~ ^[Tt]$ ]]; then
+    echo "Wklejam pliki z paczki Kamila"
+    curl -sL https://github.com/ur6an/Haier/raw/refs/heads/main/fixV1.4.3_kamil.tar.gz |tar -xz
+    echo
+fi
 
 #Dodawanie wpisu dhw
 FILE="/opt/config.ini"
@@ -103,5 +112,6 @@ awk -v val="$VALUE" '
 { print }
 ' "$FILE" > "${FILE}.tmp" && mv "${FILE}.tmp" "$FILE"
 fi
+echo
 echo "Startuje usługę Haier..."
 systemctl start haier && echo "✅ OK: USŁUGA WYSTARTOWAŁA" || echo "⚠️ UWAGA: Wystąpił błąd podczas startu usługi."
