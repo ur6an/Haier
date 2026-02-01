@@ -5,7 +5,7 @@
 #            GŁÓWNA CZĘŚĆ SKRYPTU
 # =============================================================
 
-echo "Wklejam pliki z paczki test 1.4.4"
+echo "Wklejam pliki z paczki test 1.4.5.3"
 
 systemctl stop haier
 
@@ -13,7 +13,7 @@ rm -rf /opt/haier/static
 rm -rf /opt/haier/templates
 rm /opt/haier/main.py
 cd /opt/haier
-curl -sL https://github.com/ur6an/Haier/raw/refs/heads/main/fixV1.4.4K.tar.gz |tar -xz
+curl -sL https://github.com/ur6an/Haier/raw/refs/heads/main/fixV1.4.5.3.tar.gz |tar -xz
 cp /opt/config.ini /opt/config.ini.backup
 
 echo "Podmiana zakończona"
@@ -23,7 +23,7 @@ echo
 
 #if [[ "$answer" =~ ^[Tt]$ ]]; then
 #    echo "Wklejam pliki z paczki Kamila"
-#    curl -sL https://github.com/ur6an/Haier/raw/refs/heads/main/fixV1.4.3_kamil.tar.gz |tar -xz
+#    curl -sL https://github.com/ur6an/Haier/raw/refs/heads/main/fixV1.4.4.2_Kamil.tar.gz |tar -xz
 #    echo
 #fi
 
@@ -133,6 +133,49 @@ awk -v val="$VALUE" '
 /^\[HOMEASSISTANT\]/ {
     print
     print "dhwsensor ="
+    next
+}
+{ print }
+' "$FILE" > "${FILE}.tmp" && mv "${FILE}.tmp" "$FILE"
+fi
+
+ZAKONCZ=0
+
+# Sprawdzenie czy wpis dhwnolimit_mode już istnieje
+if grep -Eq '^[[:space:]]*dhwnolimit_mode[[:space:]]*=[[:space:]]*' "$FILE"; then
+    ZAKONCZ=1
+    echo "Wpis dhwnolimit_mode istnieje"
+fi
+
+if (( ZAKONCZ != 1 )); then
+echo "Wpis dhwnolimit_mode nie istnieje"
+# Dodanie wpisu po [SETTINGS]
+awk -v val="$VALUE" '
+/^\[SETTINGS\]/ {
+    print
+    print "dhwnolimit_mode = turbo"
+    next
+}
+{ print }
+' "$FILE" > "${FILE}.tmp" && mv "${FILE}.tmp" "$FILE"
+fi
+
+ZAKONCZ=0
+
+# Sprawdzenie czy wpis ddirect_thermostat już istnieje
+if grep -Eq '^[[:space:]]*direct_thermostat[[:space:]]*=[[:space:]]*' "$FILE"; then
+    ZAKONCZ=1
+    echo "Wpis direct_thermostat istnieje"
+fi
+
+if (( ZAKONCZ != 1 )); then
+echo "Wpis direct_thermostat nie istnieje"
+# Dodanie wpisu po [SETTINGS]
+awk -v val="$VALUE" '
+/^\[SETTINGS\]/ {
+    print
+    print "direct_thermostat = 0"
+    print "direct_inside_settemp = 22.0"
     next
 }
 { print }
