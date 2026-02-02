@@ -31,6 +31,8 @@ config_has() {
 insert_after_section() {
     local section="$1"
     local content="$2"
+    local tmp
+    tmp="$(mktemp)"
 
     awk -v sec="[$section]" -v txt="$content" '
     $0 == sec {
@@ -39,8 +41,9 @@ insert_after_section() {
         next
     }
     { print }
-    ' "$CONFIG" > "$TMP" && mv "$TMP" "$CONFIG"
+    ' "$CONFIG" > "$tmp" && mv "$tmp" "$CONFIG"
 }
+
 
 # -------------------------------------------------
 # Usuwanie wpisu blablabla = abccasd
