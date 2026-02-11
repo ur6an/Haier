@@ -14,9 +14,6 @@ systemctl stop "$SERVICE"
 
 cd "$BASE_DIR"
 
-#cp "$REPO" "$CONFIG" 
-
-echo "✅ Podmiana zakończona"
 echo
 
 # -------------------------------------------------
@@ -43,6 +40,14 @@ insert_after_section() {
     ' "$CONFIG" > "$tmp" && mv "$tmp" "$CONFIG"
 }
 
+# -------------------------------------------------
+# Sprawdzanie czy wartości są puste
+# -------------------------------------------------
+
+if grep -Eq '^[[:space:]]*firstrun[[:space:]]*=[[:space:]]*$' "$CONFIG" && grep -Eq '^[[:space:]]*heizfreq[[:space:]]*=[[:space:]]*$' "$CONFIG"; then
+    echo "⚠️  Brak wartości w pliku config.ini, przywaracanie config.ini"
+	cp "$REPO" "$CONFIG" 
+fi
 
 # -------------------------------------------------
 # Usuwanie wpisu blablabla = abccasd
@@ -153,7 +158,7 @@ if [[ "$answer" =~ [Tt] ]]; then
         echo "✅ OK: Znalazłem SBC NanoPi NEO 1.4"
         insert_after_section "MAIN" "modbusdev = /dev/ttyS1"
 		insert_after_section "GPIO" \
-    "modbus=0
+    	"modbus=0
 		freqlimit=64
 		heatdemand=2
 		cooldemand=3"
@@ -161,7 +166,7 @@ if [[ "$answer" =~ [Tt] ]]; then
         echo "✅ OK: Znalazłem SBC RaspberryPi zero W"
         insert_after_section "MAIN" "modbusdev = /dev/ttyAMA0"
 		insert_after_section "GPIO" \
-    "modbus=17
+    	"modbus=17
 		freqlimit=27
 		heatdemand=22
 		cooldemand=10"
