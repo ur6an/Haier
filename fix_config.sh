@@ -15,12 +15,7 @@ cd "$BASE_DIR"
 echo
 if [[ ! -f "$CONFIG" ]]; then
     echo "⚠️  Brak pliku config.ini, przywracanie config.ini"
-    if [[ -f "$REPO" ]]; then
-        cp "$REPO" "$CONFIG"
-    else
-        echo "❌ Brak pliku repo: $REPO"
-        exit 1
-    fi
+    wget -P /opt/ https://github.com/ur6an/Haier/raw/refs/heads/main/config.ini
 fi
 
 # -------------------------------------------------
@@ -53,12 +48,7 @@ insert_after_section() {
 
 if grep -Eq '^[[:space:]]*firstrun[[:space:]]*=[[:space:]]*$' "$CONFIG" && grep -Eq '^[[:space:]]*modbus[[:space:]]*=[[:space:]]*$' "$CONFIG"; then
     echo "⚠️  Brak wartości w pliku config.ini, przywracanie config.ini"
-    if [[ -f "$REPO" ]]; then
-        cp "$REPO" "$CONFIG"
-    else
-        echo "❌ Brak pliku repo: $REPO"
-        exit 1
-    fi
+    wget -P /opt/ https://github.com/ur6an/Haier/raw/refs/heads/main/config.ini
 fi
 
 # -------------------------------------------------
