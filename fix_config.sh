@@ -44,7 +44,7 @@ insert_after_section() {
 # Sprawdzanie czy wartości są puste
 # -------------------------------------------------
 
-if grep -Eq '^[[:space:]]*firstrun[[:space:]]*=[[:space:]]*$' "$CONFIG" && grep -Eq '^[[:space:]]*heizfreq[[:space:]]*=[[:space:]]*$' "$CONFIG"; then
+if grep -Eq '^[[:space:]]*firstrun[[:space:]]*=[[:space:]]*$' "$CONFIG" && grep -Eq '^[[:space:]]*modbus[[:space:]]*=[[:space:]]*$' "$CONFIG"; then
     echo "⚠️  Brak wartości w pliku config.ini, przywaracanie config.ini"
 	cp "$REPO" "$CONFIG" 
 fi
@@ -54,6 +54,8 @@ fi
 # -------------------------------------------------
 
 sed -i '/^[[:space:]]*blablabla[[:space:]]*=/d' "$CONFIG"
+sed -i '/^[[:space:]]*omlat[[:space:]]*=/d' "$CONFIG"
+sed -i '/^[[:space:]]*omlon[[:space:]]*=/d' "$CONFIG"
 
 # -------------------------------------------------
 # CWU
