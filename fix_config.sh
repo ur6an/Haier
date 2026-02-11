@@ -8,7 +8,7 @@ REPO_URL="https://github.com/ur6an/Haier/raw/refs/heads/main/config.ini"
 
 echo "Naprawiamy config"
 
-systemctl stop "$SERVICE"
+#systemctl stop "$SERVICE"
 
 cd "$BASE_DIR"
 
@@ -177,6 +177,6 @@ fi
 # -------------------------------------------------
 echo
 echo "🚀 Startuję usługę Haier..."
-systemctl start "$SERVICE" \
-    && echo "✅ OK: USŁUGA WYSTARTOWAŁA" \
-    || echo "⚠️  Błąd uruchamiania usługi"
+#systemctl start "$SERVICE" \
+#    && echo "✅ OK: USŁUGA WYSTARTOWAŁA" \
+#    || echo "⚠️  Błąd uruchamiania usługi"
