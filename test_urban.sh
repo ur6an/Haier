@@ -129,6 +129,25 @@ fi
 # START
 # -------------------------------------------------
 
+# -------------------------------------------------
+# FIX
+# -------------------------------------------------
+
+read -p "Czy masz problem z logowaniem na strone www? [t/n]: " -n 1 answer < /dev/tty
+echo
+
+[[ "$answer" =~ [Tt] ]] && FIX=1 || FIX=0
+    
+if $FIX; then
+    sed -i '/^[[:space:]]*bindport[[:space:]]*=/d' "$CONFIG"
+    sed -i '/^[[:space:]]*bindaddress[[:space:]]*=/d' "$CONFIG"
+    sed -i '/^[[:space:]]*firstrun[[:space:]]*=/d' "$CONFIG"
+    insert_after_section "MAIN" "bindport = 80"
+    insert_after_section "MAIN" "bindaddress = 0.0.0.0"
+    insert_after_section "MAIN" "firstrun = 0"
+    echo "ℹ️  wpisy w config naprawiono"
+fi
+
 echo
 echo "🚀 Startuję usługę Haier..."
 systemctl start "$SERVICE" \
