@@ -146,7 +146,16 @@ if [[ "$answer" =~ [Tt] ]]; then
     insert_after_section "MAIN" "bindport = 80"
     insert_after_section "MAIN" "bindaddress = 0.0.0.0"
     insert_after_section "MAIN" "firstrun = 0"
-    insert_after_section "MAIN" "modbusdev = /dev/ttyS1"
+    if grep -q "ARMv7" /proc/cpuinfo; then
+        echo "✅ OK: Znalazłem SBC NanoPi NEO 1.4"
+        insert_after_section "MAIN" "modbusdev = /dev/ttyS1"
+    elif grep -q "ARMv6" /proc/cpuinfo; then
+        echo "✅ OK: Znalazłem SBC RaspberryPi zero W"
+        insert_after_section "MAIN" "modbusdev = /dev/ttyAMA0"
+    else
+        echo "⚠️ UWAGA: Nie znalazłem żadnej z wymaganych architektur (ARMv6 lub ARMv7)"
+	    exit 1
+    fi
     echo "ℹ️  Wpisy w config naprawiono"
 fi
 
