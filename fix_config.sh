@@ -57,8 +57,8 @@ fi
 # -------------------------------------------------
 
 sed -i '/^[[:space:]]*blablabla[[:space:]]*=/d' "$CONFIG"
-sed -i '/^[[:space:]]*omlat[[:space:]]*=/d' "$CONFIG"
-sed -i '/^[[:space:]]*omlon[[:space:]]*=/d' "$CONFIG"
+#sed -i '/^[[:space:]]*omlat[[:space:]]*=/d' "$CONFIG"
+#sed -i '/^[[:space:]]*omlon[[:space:]]*=/d' "$CONFIG"
 
 # -------------------------------------------------
 # CWU
@@ -83,11 +83,11 @@ fi
 if ! config_has "zone_frost_enable"; then
     insert_after_section "SETTINGS" \
     "zone_frost_enable = 0
-    zone_frost_temp = -5
-    zone_frost_mode = quiet
-    zone_warm_enable = 0
-    zone_warm_temp = 10
-    zone_warm_mode = quiet_flimit"
+	zone_frost_temp = -5
+	zone_frost_mode = quiet
+	zone_warm_enable = 0
+	zone_warm_temp = 10
+	zone_warm_mode = quiet_flimit"
     echo "ℹ️  Wpis zone dodany"
 else
     echo "ℹ️  Wpis zone istnieje"
@@ -152,10 +152,10 @@ if [[ "$answer" =~ [Tt] ]]; then
     sed -i '/^[[:space:]]*bindaddress[[:space:]]*=/d' "$CONFIG"
     sed -i '/^[[:space:]]*firstrun[[:space:]]*=/d' "$CONFIG"
     sed -i '/^[[:space:]]*modbusdev[[:space:]]*=/d' "$CONFIG"
-	  sed -i '/^[[:space:]]*modbus[[:space:]]*=/d' "$CONFIG"
-	  sed -i '/^[[:space:]]*freqlimit[[:space:]]*=/d' "$CONFIG"
-	  sed -i '/^[[:space:]]*heatdemand[[:space:]]*=/d' "$CONFIG"
-	  sed -i '/^[[:space:]]*cooldemand[[:space:]]*=/d' "$CONFIG"
+	sed -i '/^[[:space:]]*modbus[[:space:]]*=/d' "$CONFIG"
+	sed -i '/^[[:space:]]*freqlimit[[:space:]]*=/d' "$CONFIG"
+	sed -i '/^[[:space:]]*heatdemand[[:space:]]*=/d' "$CONFIG"
+	sed -i '/^[[:space:]]*cooldemand[[:space:]]*=/d' "$CONFIG"
     insert_after_section "MAIN" "bindport = 80"
     insert_after_section "MAIN" "bindaddress = 0.0.0.0"
     insert_after_section "MAIN" "firstrun = 0"
