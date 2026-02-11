@@ -142,9 +142,11 @@ if [[ "$answer" =~ [Tt] ]]; then
     sed -i '/^[[:space:]]*bindport[[:space:]]*=/d' "$CONFIG"
     sed -i '/^[[:space:]]*bindaddress[[:space:]]*=/d' "$CONFIG"
     sed -i '/^[[:space:]]*firstrun[[:space:]]*=/d' "$CONFIG"
+    sed -i '/^[[:space:]]*modbusdev[[:space:]]*=/d' "$CONFIG"
     insert_after_section "MAIN" "bindport = 80"
     insert_after_section "MAIN" "bindaddress = 0.0.0.0"
     insert_after_section "MAIN" "firstrun = 0"
+    insert_after_section "MAIN" "modbusdev = /dev/ttyS1"
     echo "ℹ️  Wpisy w config naprawiono"
 fi
 
