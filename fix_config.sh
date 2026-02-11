@@ -1,6 +1,6 @@
 
 #!/bin/bash
-set -euo pipefail
+#set -euo pipefail
 
 SERVICE="haier"
 BASE_DIR="/opt/haier"
