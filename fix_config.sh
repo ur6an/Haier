@@ -1,10 +1,10 @@
 #!/bin/bash
-#set -euo pipefail
+set -euo pipefail
 
 SERVICE="haier"
 BASE_DIR="/opt/haier"
 CONFIG="/opt/config.ini"
-REPO="/opt/haier/config.ini.repo"
+REPO_URL="https://github.com/ur6an/Haier/raw/refs/heads/main/config.ini"
 
 echo "Naprawiamy config"
 
@@ -13,9 +13,10 @@ systemctl stop "$SERVICE"
 cd "$BASE_DIR"
 
 echo
+# Jeśli plik nie istnieje → pobierz
 if [[ ! -f "$CONFIG" ]]; then
     echo "⚠️  Brak pliku config.ini, przywracanie config.ini"
-    wget -P /opt/ https://github.com/ur6an/Haier/raw/refs/heads/main/config.ini
+    wget -O "$CONFIG" "$REPO_URL"
 fi
 
 # -------------------------------------------------
@@ -32,8 +33,9 @@ insert_after_section() {
     local tmp
     tmp="$(mktemp)"
 
-    awk -v sec="[$section]" -v txt="$content" '
-    $0 == sec {
+    # Dopasowanie sekcji nawet ze spacjami po nawiasach
+    awk -v sec="\\[""$section""\\][[:space:]]*$" -v txt="$content" '
+    $0 ~ sec {
         print
         print txt
         next
@@ -45,28 +47,24 @@ insert_after_section() {
 # -------------------------------------------------
 # Sprawdzanie czy wartości są puste
 # -------------------------------------------------
-
-if grep -Eq '^[[:space:]]*firstrun[[:space:]]*=[[:space:]]*$' "$CONFIG" && grep -Eq '^[[:space:]]*modbus[[:space:]]*=[[:space:]]*$' "$CONFIG"; then
+if grep -Eq '^[[:space:]]*firstrun[[:space:]]*=[[:space:]]*$' "$CONFIG" && \
+   grep -Eq '^[[:space:]]*modbus[[:space:]]*=[[:space:]]*$' "$CONFIG"; then
     echo "⚠️  Brak wartości w pliku config.ini, przywracanie config.ini"
-    wget -P /opt/ https://github.com/ur6an/Haier/raw/refs/heads/main/config.ini
+    wget -O "$CONFIG" "$REPO_URL"
 fi
 
 # -------------------------------------------------
-# Usuwanie wpisu blablabla = abccasd
+# Usuwanie wpisu blablabla
 # -------------------------------------------------
-
 sed -i '/^[[:space:]]*blablabla[[:space:]]*=/d' "$CONFIG"
 
 # -------------------------------------------------
 # CWU
 # -------------------------------------------------
-
 if ! config_has "dhwuse"; then
     read -p "Czy korzystasz z CWU? [t/n]: " -n 1 answer < /dev/tty
     echo
-
     [[ "$answer" =~ [Tt] ]] && DHW=1 || DHW=0
-
     insert_after_section "SETTINGS" "dhwuse = $DHW"
     echo "ℹ️  Wpis dhwuse dodany"
 else
@@ -76,7 +74,6 @@ fi
 # -------------------------------------------------
 # ZONE
 # -------------------------------------------------
-
 if ! config_has "zone_frost_enable"; then
     insert_after_section "SETTINGS" \
 "zone_frost_enable = 0
@@ -93,7 +90,6 @@ fi
 # -------------------------------------------------
 # EMERGENCY
 # -------------------------------------------------
-
 if ! config_has "emergency_intemp"; then
     insert_after_section "SETTINGS" "emergency_intemp = 20.0"
     echo "ℹ️  Wpis emergency_intemp dodany"
@@ -104,7 +100,6 @@ fi
 # -------------------------------------------------
 # DHW TEMP
 # -------------------------------------------------
-
 if ! config_has "dhwtemp"; then
     insert_after_section "SETTINGS" "dhwtemp = builtin"
     insert_after_section "HOMEASSISTANT" "dhwsensor ="
@@ -116,7 +111,6 @@ fi
 # -------------------------------------------------
 # NO LIMIT MODE
 # -------------------------------------------------
-
 if ! config_has "dhwnolimit_mode"; then
     insert_after_section "SETTINGS" "dhwnolimit_mode = turbo"
     echo "ℹ️  Wpis dhwnolimit_mode dodany"
@@ -127,7 +121,6 @@ fi
 # -------------------------------------------------
 # DIRECT THERMOSTAT
 # -------------------------------------------------
-
 if ! config_has "direct_thermostat"; then
     insert_after_section "SETTINGS" \
 "direct_thermostat = 0
@@ -138,12 +131,10 @@ else
 fi
 
 # -------------------------------------------------
-# FIX
+# FIX logowania WWW
 # -------------------------------------------------
-
-read -p "Czy masz problem z logowaniem na strone www? [t/n]: " -n 1 answer < /dev/tty
+read -p "Czy masz problem z logowaniem na stronę www? [t/n]: " -n 1 answer < /dev/tty
 echo
-
 if [[ "$answer" =~ [Tt] ]]; then
     sed -i '/^[[:space:]]*bindport[[:space:]]*=/d' "$CONFIG"
     sed -i '/^[[:space:]]*bindaddress[[:space:]]*=/d' "$CONFIG"
@@ -153,9 +144,11 @@ if [[ "$answer" =~ [Tt] ]]; then
     sed -i '/^[[:space:]]*freqlimit[[:space:]]*=/d' "$CONFIG"
     sed -i '/^[[:space:]]*heatdemand[[:space:]]*=/d' "$CONFIG"
     sed -i '/^[[:space:]]*cooldemand[[:space:]]*=/d' "$CONFIG"
+
     insert_after_section "MAIN" "bindport = 80"
     insert_after_section "MAIN" "bindaddress = 0.0.0.0"
     insert_after_section "MAIN" "firstrun = 0"
+
     if grep -q "ARMv7" /proc/cpuinfo; then
         echo "✅ OK: Znalazłem SBC NanoPi NEO 1.4"
         insert_after_section "MAIN" "modbusdev = /dev/ttyS1"
@@ -173,7 +166,7 @@ freqlimit = 27
 heatdemand = 22
 cooldemand = 10"
     else
-        echo "⚠️ UWAGA: Nie znalazłem żadnej z wymaganych architektur (ARMv6 lub ARMv7)"
+        echo "⚠️ UWAGA: Nie znalazłem wymaganej architektury (ARMv6 lub ARMv7)"
         exit 1
     fi
     echo "ℹ️  Wpisy w config naprawiono"
@@ -182,7 +175,6 @@ fi
 # -------------------------------------------------
 # START
 # -------------------------------------------------
-
 echo
 echo "🚀 Startuję usługę Haier..."
 systemctl start "$SERVICE" \
