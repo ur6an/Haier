@@ -1,4 +1,3 @@
-
 #!/bin/bash
 #set -euo pipefail
 
@@ -6,7 +5,6 @@ SERVICE="haier"
 BASE_DIR="/opt/haier"
 CONFIG="/opt/config.ini"
 REPO="/opt/haier/config.ini.repo"
-TMP="$(mktemp)"
 
 echo "Naprawiamy config"
 
@@ -16,9 +14,15 @@ cd "$BASE_DIR"
 
 echo
 if [[ ! -f "$CONFIG" ]]; then
-    echo "⚠️  Brak pliku config.ini, przywaracanie config.ini"
-	cp "$REPO" "$CONFIG" 
+    echo "⚠️  Brak pliku config.ini, przywracanie config.ini"
+    if [[ -f "$REPO" ]]; then
+        cp "$REPO" "$CONFIG"
+    else
+        echo "❌ Brak pliku repo: $REPO"
+        exit 1
+    fi
 fi
+
 # -------------------------------------------------
 # FUNKCJE
 # -------------------------------------------------
@@ -48,8 +52,13 @@ insert_after_section() {
 # -------------------------------------------------
 
 if grep -Eq '^[[:space:]]*firstrun[[:space:]]*=[[:space:]]*$' "$CONFIG" && grep -Eq '^[[:space:]]*modbus[[:space:]]*=[[:space:]]*$' "$CONFIG"; then
-    echo "⚠️  Brak wartości w pliku config.ini, przywaracanie config.ini"
-	cp "$REPO" "$CONFIG" 
+    echo "⚠️  Brak wartości w pliku config.ini, przywracanie config.ini"
+    if [[ -f "$REPO" ]]; then
+        cp "$REPO" "$CONFIG"
+    else
+        echo "❌ Brak pliku repo: $REPO"
+        exit 1
+    fi
 fi
 
 # -------------------------------------------------
@@ -57,8 +66,6 @@ fi
 # -------------------------------------------------
 
 sed -i '/^[[:space:]]*blablabla[[:space:]]*=/d' "$CONFIG"
-#sed -i '/^[[:space:]]*omlat[[:space:]]*=/d' "$CONFIG"
-#sed -i '/^[[:space:]]*omlon[[:space:]]*=/d' "$CONFIG"
 
 # -------------------------------------------------
 # CWU
@@ -82,12 +89,12 @@ fi
 
 if ! config_has "zone_frost_enable"; then
     insert_after_section "SETTINGS" \
-    "zone_frost_enable = 0
-	zone_frost_temp = -5
-	zone_frost_mode = quiet
-	zone_warm_enable = 0
-	zone_warm_temp = 10
-	zone_warm_mode = quiet_flimit"
+"zone_frost_enable = 0
+zone_frost_temp = -5
+zone_frost_mode = quiet
+zone_warm_enable = 0
+zone_warm_temp = 10
+zone_warm_mode = quiet_flimit"
     echo "ℹ️  Wpis zone dodany"
 else
     echo "ℹ️  Wpis zone istnieje"
@@ -146,38 +153,38 @@ fi
 
 read -p "Czy masz problem z logowaniem na strone www? [t/n]: " -n 1 answer < /dev/tty
 echo
-    
+
 if [[ "$answer" =~ [Tt] ]]; then
     sed -i '/^[[:space:]]*bindport[[:space:]]*=/d' "$CONFIG"
     sed -i '/^[[:space:]]*bindaddress[[:space:]]*=/d' "$CONFIG"
     sed -i '/^[[:space:]]*firstrun[[:space:]]*=/d' "$CONFIG"
     sed -i '/^[[:space:]]*modbusdev[[:space:]]*=/d' "$CONFIG"
-	sed -i '/^[[:space:]]*modbus[[:space:]]*=/d' "$CONFIG"
-	sed -i '/^[[:space:]]*freqlimit[[:space:]]*=/d' "$CONFIG"
-	sed -i '/^[[:space:]]*heatdemand[[:space:]]*=/d' "$CONFIG"
-	sed -i '/^[[:space:]]*cooldemand[[:space:]]*=/d' "$CONFIG"
+    sed -i '/^[[:space:]]*modbus[[:space:]]*=/d' "$CONFIG"
+    sed -i '/^[[:space:]]*freqlimit[[:space:]]*=/d' "$CONFIG"
+    sed -i '/^[[:space:]]*heatdemand[[:space:]]*=/d' "$CONFIG"
+    sed -i '/^[[:space:]]*cooldemand[[:space:]]*=/d' "$CONFIG"
     insert_after_section "MAIN" "bindport = 80"
     insert_after_section "MAIN" "bindaddress = 0.0.0.0"
     insert_after_section "MAIN" "firstrun = 0"
     if grep -q "ARMv7" /proc/cpuinfo; then
         echo "✅ OK: Znalazłem SBC NanoPi NEO 1.4"
         insert_after_section "MAIN" "modbusdev = /dev/ttyS1"
-		insert_after_section "GPIO" \
-    	"modbus = 0
-		freqlimit = 64
-		heatdemand = 2
-		cooldemand = 3"
+        insert_after_section "GPIO" \
+"modbus = 0
+freqlimit = 64
+heatdemand = 2
+cooldemand = 3"
     elif grep -q "ARMv6" /proc/cpuinfo; then
         echo "✅ OK: Znalazłem SBC RaspberryPi zero W"
         insert_after_section "MAIN" "modbusdev = /dev/ttyAMA0"
-		insert_after_section "GPIO" \
-    	"modbus = 17
-		freqlimit = 27
-		heatdemand = 22
-		cooldemand = 10"
+        insert_after_section "GPIO" \
+"modbus = 17
+freqlimit = 27
+heatdemand = 22
+cooldemand = 10"
     else
         echo "⚠️ UWAGA: Nie znalazłem żadnej z wymaganych architektur (ARMv6 lub ARMv7)"
-	    exit 1
+        exit 1
     fi
     echo "ℹ️  Wpisy w config naprawiono"
 fi
