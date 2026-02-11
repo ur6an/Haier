@@ -138,7 +138,7 @@ echo
 
 [[ "$answer" =~ [Tt] ]] && FIX=1 || FIX=0
     
-if $FIX; then
+if "FIX"; then
     sed -i '/^[[:space:]]*bindport[[:space:]]*=/d' "$CONFIG"
     sed -i '/^[[:space:]]*bindaddress[[:space:]]*=/d' "$CONFIG"
     sed -i '/^[[:space:]]*firstrun[[:space:]]*=/d' "$CONFIG"
