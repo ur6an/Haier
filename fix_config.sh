@@ -15,7 +15,10 @@ systemctl stop "$SERVICE"
 cd "$BASE_DIR"
 
 echo
-
+if [[ ! -f "$CONFIG" ]]; then
+    echo "⚠️  Brak pliku config.ini, przywaracanie config.ini"
+	cp "$REPO" "$CONFIG" 
+fi
 # -------------------------------------------------
 # FUNKCJE
 # -------------------------------------------------
@@ -44,7 +47,7 @@ insert_after_section() {
 # Sprawdzanie czy wartości są puste
 # -------------------------------------------------
 
-if [[ ! -f "$CONFIG" ]] || grep -Eq '^[[:space:]]*firstrun[[:space:]]*=[[:space:]]*$' "$CONFIG" && grep -Eq '^[[:space:]]*modbus[[:space:]]*=[[:space:]]*$' "$CONFIG"; then
+if grep -Eq '^[[:space:]]*firstrun[[:space:]]*=[[:space:]]*$' "$CONFIG" && grep -Eq '^[[:space:]]*modbus[[:space:]]*=[[:space:]]*$' "$CONFIG"; then
     echo "⚠️  Brak wartości w pliku config.ini, przywaracanie config.ini"
 	cp "$REPO" "$CONFIG" 
 fi
