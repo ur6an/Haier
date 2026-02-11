@@ -62,6 +62,7 @@ if ! config_has "dhwuse"; then
     [[ "$answer" =~ [Tt] ]] && DHW=1 || DHW=0
 
     insert_after_section "SETTINGS" "dhwuse = $DHW"
+    echo "ℹ️  Wpis dhwuse dodany"
 else
     echo "ℹ️  Wpis dhwuse istnieje"
 fi
@@ -72,12 +73,13 @@ fi
 
 if ! config_has "zone_frost_enable"; then
     insert_after_section "SETTINGS" \
-"zone_frost_enable = 0
-zone_frost_temp = -5
-zone_frost_mode = quiet
-zone_warm_enable = 0
-zone_warm_temp = 10
-zone_warm_mode = quiet_flimit"
+    "zone_frost_enable = 0
+    zone_frost_temp = -5
+    zone_frost_mode = quiet
+    zone_warm_enable = 0
+    zone_warm_temp = 10
+    zone_warm_mode = quiet_flimit"
+    echo "ℹ️  Wpis zone dodany"
 else
     echo "ℹ️  Wpis zone istnieje"
 fi
@@ -88,6 +90,7 @@ fi
 
 if ! config_has "emergency_intemp"; then
     insert_after_section "SETTINGS" "emergency_intemp = 20.0"
+    echo "ℹ️  Wpis emergency_intemp dodany"
 else
     echo "ℹ️  Wpis emergency_intemp istnieje"
 fi
@@ -99,6 +102,7 @@ fi
 if ! config_has "dhwtemp"; then
     insert_after_section "SETTINGS" "dhwtemp = builtin"
     insert_after_section "HOMEASSISTANT" "dhwsensor ="
+    echo "ℹ️  Wpis dhwtemp dodany"
 else
     echo "ℹ️  Wpis dhwtemp istnieje"
 fi
@@ -109,6 +113,7 @@ fi
 
 if ! config_has "dhwnolimit_mode"; then
     insert_after_section "SETTINGS" "dhwnolimit_mode = turbo"
+    echo "ℹ️  Wpis dhwnolimit_mode dodany"
 else
     echo "ℹ️  Wpis dhwnolimit_mode istnieje"
 fi
@@ -121,13 +126,10 @@ if ! config_has "direct_thermostat"; then
     insert_after_section "SETTINGS" \
 "direct_thermostat = 0
 direct_inside_settemp = 22.0"
+    echo "ℹ️  Wpis direct_thermostat dodany"
 else
     echo "ℹ️  Wpis direct_thermostat istnieje"
 fi
-
-# -------------------------------------------------
-# START
-# -------------------------------------------------
 
 # -------------------------------------------------
 # FIX
@@ -143,8 +145,12 @@ if [[ "$answer" =~ [Tt] ]]; then
     insert_after_section "MAIN" "bindport = 80"
     insert_after_section "MAIN" "bindaddress = 0.0.0.0"
     insert_after_section "MAIN" "firstrun = 0"
-    echo "ℹ️  wpisy w config naprawiono"
+    echo "ℹ️  Wpisy w config naprawiono"
 fi
+
+# -------------------------------------------------
+# START
+# -------------------------------------------------
 
 echo
 echo "🚀 Startuję usługę Haier..."
