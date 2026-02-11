@@ -163,18 +163,18 @@ if [[ "$answer" =~ [Tt] ]]; then
         echo "✅ OK: Znalazłem SBC NanoPi NEO 1.4"
         insert_after_section "MAIN" "modbusdev = /dev/ttyS1"
 		insert_after_section "GPIO" \
-    	"modbus=0
-		freqlimit=64
-		heatdemand=2
-		cooldemand=3"
+    	"modbus = 0
+		freqlimit = 64
+		heatdemand = 2
+		cooldemand = 3"
     elif grep -q "ARMv6" /proc/cpuinfo; then
         echo "✅ OK: Znalazłem SBC RaspberryPi zero W"
         insert_after_section "MAIN" "modbusdev = /dev/ttyAMA0"
 		insert_after_section "GPIO" \
-    	"modbus=17
-		freqlimit=27
-		heatdemand=22
-		cooldemand=10"
+    	"modbus = 17
+		freqlimit = 27
+		heatdemand = 22
+		cooldemand = 10"
     else
         echo "⚠️ UWAGA: Nie znalazłem żadnej z wymaganych architektur (ARMv6 lub ARMv7)"
 	    exit 1
