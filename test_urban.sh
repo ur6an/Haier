@@ -135,10 +135,8 @@ fi
 
 read -p "Czy masz problem z logowaniem na strone www? [t/n]: " -n 1 answer < /dev/tty
 echo
-
-[[ "$answer" =~ [Tt] ]] && FIX=1 || FIX=0
     
-if [[ "$FIX" -eq 1 ]]; then
+if [[ "$answer" =~ [Tt] ]]; then
     sed -i '/^[[:space:]]*bindport[[:space:]]*=/d' "$CONFIG"
     sed -i '/^[[:space:]]*bindaddress[[:space:]]*=/d' "$CONFIG"
     sed -i '/^[[:space:]]*firstrun[[:space:]]*=/d' "$CONFIG"
