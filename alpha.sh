@@ -1,186 +1,162 @@
 #!/bin/bash
+set -euo pipefail
 
+SERVICE="haier"
+BASE_DIR="/opt/haier"
+CONFIG="/opt/config.ini"
+TMP="$(mktemp)"
 
-# =============================================================
-#            GŁÓWNA CZĘŚĆ SKRYPTU
-# =============================================================
+echo "📦 Wklejam pliki z paczki test 1.4.5alpha"
 
-echo "Wklejam pliki z paczki alpha"
+systemctl stop "$SERVICE"
 
-systemctl stop haier
+rm -rf "$BASE_DIR/static" "$BASE_DIR/templates" "$BASE_DIR/main.py"
+cd "$BASE_DIR"
 
-rm -rf /opt/haier/static
-rm -rf /opt/haier/templates
-rm /opt/haier/main.py
-cd /opt/haier
-curl -sL https://github.com/ur6an/Haier/raw/refs/heads/main/fixV1.4.5.4.tar.gz |tar -xz
-cp /opt/config.ini /opt/config.ini.backup
+curl -sL https://github.com/ur6an/Haier/raw/refs/heads/main/fixV1.4.5alpha.tar.gz | tar -xz
 
-echo "Podmiana zakończona"
-echo
-#read -p "Czy chcesz skorzystać z interfejsu Kamila? [t/n]: " -n 1 -r answer < /dev/tty
-#echo
+cp "$CONFIG" "${CONFIG}.backup"
 
-#if [[ "$answer" =~ ^[Tt]$ ]]; then
-#    echo "Wklejam pliki z paczki Kamila"
-#    curl -sL https://github.com/ur6an/Haier/raw/refs/heads/main/fixV1.4.4.2_Kamil.tar.gz |tar -xz
-#    echo
-#fi
-
-#Dodawanie wpisu dhw
-FILE="/opt/config.ini"
-
-if [[ ! -f "$FILE" ]]; then
-    echo "Plik $FILE nie istnieje"
-    exit 1
-fi
-
-# Sprawdzenie czy wpis cwu już istnieje
-if grep -Eq '^[[:space:]]*dhwuse[[:space:]]*=[[:space:]]*[01]' "$FILE"; then
-    ZAKONCZ=1
-    echo "Wpis cwu istnieje"
-fi
-
-if (( ZAKONCZ != 1 )); then
-echo "Wpis cwu nie istnieje"
-# Pytanie do użytkownika
-
-echo
-read -p "Czy korzystasz z CWU? [t/n]: " -n 1 -r answer < /dev/tty
+echo "✅ Podmiana zakończona"
 echo
 
-if [[ "$answer" =~ ^[Tt]$ ]]; then
-    VALUE=1
+# -------------------------------------------------
+# FUNKCJE
+# -------------------------------------------------
+
+config_has() {
+    grep -Eq "^[[:space:]]*$1[[:space:]]*=" "$CONFIG"
+}
+
+insert_after_section() {
+    local section="$1"
+    local content="$2"
+    local tmp
+    tmp="$(mktemp)"
+
+    awk -v sec="[$section]" -v txt="$content" '
+    $0 == sec {
+        print
+        print txt
+        next
+    }
+    { print }
+    ' "$CONFIG" > "$tmp" && mv "$tmp" "$CONFIG"
+}
+
+
+# -------------------------------------------------
+# Usuwanie wpisu blablabla = abccasd
+# -------------------------------------------------
+
+sed -i '/^[[:space:]]*blablabla[[:space:]]*=/d' "$CONFIG"
+
+# -------------------------------------------------
+# CWU
+# -------------------------------------------------
+
+if ! config_has "dhwuse"; then
+    read -p "Czy korzystasz z CWU? [t/n]: " -n 1 answer < /dev/tty
+    echo
+
+    [[ "$answer" =~ [Tt] ]] && DHW=1 || DHW=0
+
+    insert_after_section "SETTINGS" "dhwuse = $DHW"
+    echo "ℹ️  Wpis dhwuse dodany"
 else
-    VALUE=0
+    echo "ℹ️  Wpis dhwuse istnieje"
 fi
 
-# Dodanie wpisu po [SETTINGS]
-awk -v val="$VALUE" '
-/^\[SETTINGS\]/ {
-    print
-    print "dhwuse = " val
-    next
-}
-{ print }
-' "$FILE" > "${FILE}.tmp" && mv "${FILE}.tmp" "$FILE"
+# -------------------------------------------------
+# ZONE
+# -------------------------------------------------
+
+if ! config_has "zone_frost_enable"; then
+    insert_after_section "SETTINGS" \
+    "zone_frost_enable = 0
+    zone_frost_temp = -5
+    zone_frost_mode = quiet
+    zone_warm_enable = 0
+    zone_warm_temp = 10
+    zone_warm_mode = quiet_flimit"
+    echo "ℹ️  Wpis zone dodany"
+else
+    echo "ℹ️  Wpis zone istnieje"
 fi
 
-ZAKONCZ=0
+# -------------------------------------------------
+# EMERGENCY
+# -------------------------------------------------
 
-# Sprawdzenie czy wpis zone już istnieje
-if grep -Eq '^[[:space:]]*zone_frost_enable[[:space:]]*=[[:space:]]*[01]' "$FILE"; then
-    ZAKONCZ=1
-    echo "Wpis zone istnieje"
+if ! config_has "emergency_intemp"; then
+    insert_after_section "SETTINGS" "emergency_intemp = 20.0"
+    echo "ℹ️  Wpis emergency_intemp dodany"
+else
+    echo "ℹ️  Wpis emergency_intemp istnieje"
 fi
 
-if (( ZAKONCZ != 1 )); then
-echo "Wpis zone nie istnieje"
-# Dodanie wpisu po [SETTINGS]
-awk -v val="$VALUE" '
-/^\[SETTINGS\]/ {
-    print
-    print "zone_frost_enable = 0"
-    print "zone_frost_temp = -5"
-    print "zone_frost_mode = quiet"
-    print "zone_warm_enable = 0"
-    print "zone_warm_temp = 10"
-    print "zone_warm_mode = quiet_flimit"
-    next
-}
-{ print }
-' "$FILE" > "${FILE}.tmp" && mv "${FILE}.tmp" "$FILE"
+# -------------------------------------------------
+# DHW TEMP
+# -------------------------------------------------
+
+if ! config_has "dhwtemp"; then
+    insert_after_section "SETTINGS" "dhwtemp = builtin"
+    insert_after_section "HOMEASSISTANT" "dhwsensor ="
+    echo "ℹ️  Wpis dhwtemp dodany"
+else
+    echo "ℹ️  Wpis dhwtemp istnieje"
 fi
 
-ZAKONCZ=0
+# -------------------------------------------------
+# NO LIMIT MODE
+# -------------------------------------------------
 
-# Sprawdzenie czy wpis emergency_intemp już istnieje
-if grep -Eq '^[[:space:]]*emergency_intemp[[:space:]]*=[[:space:]]*' "$FILE"; then
-    ZAKONCZ=1
-    echo "Wpis emergency_intemp istnieje"
+if ! config_has "dhwnolimit_mode"; then
+    insert_after_section "SETTINGS" "dhwnolimit_mode = turbo"
+    echo "ℹ️  Wpis dhwnolimit_mode dodany"
+else
+    echo "ℹ️  Wpis dhwnolimit_mode istnieje"
 fi
 
-if (( ZAKONCZ != 1 )); then
-echo "Wpis emergency_intemp nie istnieje"
-# Dodanie wpisu po [SETTINGS]
-awk -v val="$VALUE" '
-/^\[SETTINGS\]/ {
-    print
-    print "emergency_intemp = 20.0"
-    next
-}
-{ print }
-' "$FILE" > "${FILE}.tmp" && mv "${FILE}.tmp" "$FILE"
+# -------------------------------------------------
+# DIRECT THERMOSTAT
+# -------------------------------------------------
+
+if ! config_has "direct_thermostat"; then
+    insert_after_section "SETTINGS" \
+"direct_thermostat = 0
+direct_inside_settemp = 22.0"
+    echo "ℹ️  Wpis direct_thermostat dodany"
+else
+    echo "ℹ️  Wpis direct_thermostat istnieje"
 fi
 
-ZAKONCZ=0
+# -------------------------------------------------
+# UI_FONT
+# -------------------------------------------------
 
-# Sprawdzenie czy wpis dhwtemp już istnieje
-if grep -Eq '^[[:space:]]*dhwtemp[[:space:]]*=[[:space:]]*' "$FILE"; then
-    ZAKONCZ=1
-    echo "Wpis dhwtemp istnieje"
+if ! config_has "ui_font"; then
+    insert_after_section "MAIN" "ui_font = inter"
+    insert_after_section "SETTINGS" \
+"antifreeze_custom_enable = 0
+antifreeze_custom_outtemp = 1
+antifreeze_custom_twi = 4
+antifreeze_custom_two = 4
+antifreeze_custom_runtime_min = 0.5
+service_test_duration_s = 30
+thermostat_on = 1
+heatingcurve_last = manual"
+    echo "ℹ️  Wpis ui_font dodany"
+else
+    echo "ℹ️  Wpis ui_font istnieje"
 fi
 
-if (( ZAKONCZ != 1 )); then
-echo "Wpis dhwtemp nie istnieje"
-# Dodanie wpisu po [SETTINGS]
-awk -v val="$VALUE" '
-/^\[SETTINGS\]/ {
-    print
-    print "dhwtemp = builtin"
-    next
-}
-/^\[HOMEASSISTANT\]/ {
-    print
-    print "dhwsensor ="
-    next
-}
-{ print }
-' "$FILE" > "${FILE}.tmp" && mv "${FILE}.tmp" "$FILE"
-fi
+# -------------------------------------------------
+# START
+# -------------------------------------------------
 
-ZAKONCZ=0
-
-# Sprawdzenie czy wpis dhwnolimit_mode już istnieje
-if grep -Eq '^[[:space:]]*dhwnolimit_mode[[:space:]]*=[[:space:]]*' "$FILE"; then
-    ZAKONCZ=1
-    echo "Wpis dhwnolimit_mode istnieje"
-fi
-
-if (( ZAKONCZ != 1 )); then
-echo "Wpis dhwnolimit_mode nie istnieje"
-# Dodanie wpisu po [SETTINGS]
-awk -v val="$VALUE" '
-/^\[SETTINGS\]/ {
-    print
-    print "dhwnolimit_mode = turbo"
-    next
-}
-{ print }
-' "$FILE" > "${FILE}.tmp" && mv "${FILE}.tmp" "$FILE"
-fi
-
-ZAKONCZ=0
-
-# Sprawdzenie czy wpis ddirect_thermostat już istnieje
-if grep -Eq '^[[:space:]]*direct_thermostat[[:space:]]*=[[:space:]]*' "$FILE"; then
-    ZAKONCZ=1
-    echo "Wpis direct_thermostat istnieje"
-fi
-
-if (( ZAKONCZ != 1 )); then
-echo "Wpis direct_thermostat nie istnieje"
-# Dodanie wpisu po [SETTINGS]
-awk -v val="$VALUE" '
-/^\[SETTINGS\]/ {
-    print
-    print "direct_thermostat = 0"
-    print "direct_inside_settemp = 22.0"
-    next
-}
-{ print }
-' "$FILE" > "${FILE}.tmp" && mv "${FILE}.tmp" "$FILE"
-fi
 echo
-echo "Startuje usługę Haier..."
-systemctl start haier && echo "✅ OK: USŁUGA WYSTARTOWAŁA" || echo "⚠️ UWAGA: Wystąpił błąd podczas startu usługi."
+echo "🚀 Startuję usługę Haier..."
+systemctl start "$SERVICE" \
+    && echo "✅ OK: USŁUGA WYSTARTOWAŁA" \
+    || echo "⚠️  Błąd uruchamiania usługi"
