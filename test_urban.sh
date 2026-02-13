@@ -138,8 +138,7 @@ fi
 if ! config_has "ui_font"; then
     insert_after_section "MAIN" "ui_font = inter"
     insert_after_section "SETTINGS" \
-"direct_inside_settemp = 22.2
-antifreeze_custom_enable = 0
+"antifreeze_custom_enable = 0
 antifreeze_custom_outtemp = 1
 antifreeze_custom_twi = 4
 antifreeze_custom_two = 4
