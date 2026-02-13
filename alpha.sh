@@ -122,13 +122,12 @@ fi
 # DIRECT THERMOSTAT
 # -------------------------------------------------
 
-if ! config_has "direct_thermostat"; then
+if ! config_has "direct_inside_settemp"; then
     insert_after_section "SETTINGS" \
-"direct_thermostat = 0
-direct_inside_settemp = 22.0"
-    echo "ℹ️  Wpis direct_thermostat dodany"
+"direct_inside_settemp = 22.0"
+    echo "ℹ️  Wpis direct_inside_settemp dodany"
 else
-    echo "ℹ️  Wpis direct_thermostat istnieje"
+    echo "ℹ️  Wpis direct_inside_settemp istnieje"
 fi
 
 # -------------------------------------------------
