@@ -6,14 +6,14 @@ BASE_DIR="/opt/haier"
 CONFIG="/opt/config.ini"
 TMP="$(mktemp)"
 
-echo "📦 Wklejam pliki z paczki test 1.4.5.7"
+echo "📦 Wklejam pliki z paczki test 1.4.5alpha"
 
 systemctl stop "$SERVICE"
 
 rm -rf "$BASE_DIR/static" "$BASE_DIR/templates" "$BASE_DIR/main.py"
 cd "$BASE_DIR"
 
-curl -sL https://github.com/ur6an/Haier/raw/refs/heads/main/fixV1.4.5.7.tar.gz | tar -xz
+curl -sL https://github.com/ur6an/Haier/raw/refs/heads/main/fixV1.4.5alpha.tar.gz | tar -xz
 
 cp "$CONFIG" "${CONFIG}.backup"
 
@@ -129,6 +129,27 @@ direct_inside_settemp = 22.0"
     echo "ℹ️  Wpis direct_thermostat dodany"
 else
     echo "ℹ️  Wpis direct_thermostat istnieje"
+fi
+
+# -------------------------------------------------
+# UI_FONT
+# -------------------------------------------------
+
+if ! config_has "ui_font"; then
+    insert_after_section "MAIN" "ui_font = inter"
+    insert_after_section "SETTINGS" \
+"direct_inside_settemp = 22.2
+antifreeze_custom_enable = 0
+antifreeze_custom_outtemp = 1
+antifreeze_custom_twi = 4
+antifreeze_custom_two = 4
+antifreeze_custom_runtime_min = 0.5
+service_test_duration_s = 30
+thermostat_on = 1
+heatingcurve_last = manual"
+    echo "ℹ️  Wpis ui_font dodany"
+else
+    echo "ℹ️  Wpis ui_font istnieje"
 fi
 
 # -------------------------------------------------
