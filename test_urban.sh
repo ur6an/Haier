@@ -6,14 +6,14 @@ BASE_DIR="/opt/haier"
 CONFIG="/opt/config.ini"
 TMP="$(mktemp)"
 
-echo "📦 Wklejam pliki z paczki test 1.4.5alpha"
+echo "📦 Wklejam pliki z paczki test 1.4.5.7"
 
 systemctl stop "$SERVICE"
 
 rm -rf "$BASE_DIR/static" "$BASE_DIR/templates" "$BASE_DIR/main.py"
 cd "$BASE_DIR"
 
-curl -sL https://github.com/ur6an/Haier/raw/refs/heads/main/fixV1.4.5alpha.tar.gz | tar -xz
+curl -sL https://github.com/ur6an/Haier/raw/refs/heads/main/fixV1.4.5.7.tar.gz | tar -xz
 
 cp "$CONFIG" "${CONFIG}.backup"
 
@@ -123,12 +123,21 @@ fi
 # -------------------------------------------------
 
 if ! config_has "direct_thermostat"; then
-    insert_after_section "SETTINGS" \
-"direct_thermostat = 0
-direct_inside_settemp = 22.0"
+    insert_after_section "SETTINGS" "direct_thermostat = 0"
     echo "ℹ️  Wpis direct_thermostat dodany"
 else
     echo "ℹ️  Wpis direct_thermostat istnieje"
+fi
+
+# -------------------------------------------------
+# DIRECT INSIDE SETTEMP
+# -------------------------------------------------
+
+if ! config_has "direct_inside_settemp"; then
+    insert_after_section "SETTINGS" "direct_inside_settemp = 22.0"
+    echo "ℹ️  Wpis direct_inside_settemp dodany"
+else
+    echo "ℹ️  Wpis direct_inside_settemp istnieje"
 fi
 
 # -------------------------------------------------
