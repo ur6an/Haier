@@ -162,7 +162,7 @@ fi
 
 ZAKONCZ=0
 
-# Sprawdzenie czy wpis ddirect_thermostat już istnieje
+# Sprawdzenie czy wpis direct_thermostat już istnieje
 if grep -Eq '^[[:space:]]*direct_thermostat[[:space:]]*=[[:space:]]*' "$FILE"; then
     ZAKONCZ=1
     echo "Wpis direct_thermostat istnieje"
@@ -175,6 +175,26 @@ awk -v val="$VALUE" '
 /^\[SETTINGS\]/ {
     print
     print "direct_thermostat = 0"
+    next
+}
+{ print }
+' "$FILE" > "${FILE}.tmp" && mv "${FILE}.tmp" "$FILE"
+fi
+
+ZAKONCZ=0
+
+# Sprawdzenie czy wpis direct_inside_settemp już istnieje
+if grep -Eq '^[[:space:]]*direct_thermostat[[:space:]]*=[[:space:]]*' "$FILE"; then
+    ZAKONCZ=1
+    echo "Wpis direct_inside_settemp istnieje"
+fi
+
+if (( ZAKONCZ != 1 )); then
+echo "direct_inside_settemp nie istnieje"
+# Dodanie wpisu po [SETTINGS]
+awk -v val="$VALUE" '
+/^\[SETTINGS\]/ {
+    print
     print "direct_inside_settemp = 22.0"
     next
 }
