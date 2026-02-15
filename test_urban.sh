@@ -6,7 +6,7 @@ BASE_DIR="/opt/haier"
 CONFIG="/opt/config.ini"
 TMP="$(mktemp)"
 
-echo "📦 Wklejam pliki z paczki test 1.4.5.6"
+echo "📦 Wklejam pliki z paczki test 1.4.5.6" 
 
 systemctl stop "$SERVICE"
 
