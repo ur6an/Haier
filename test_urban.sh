@@ -6,14 +6,14 @@ BASE_DIR="/opt/haier"
 CONFIG="/opt/config.ini"
 TMP="$(mktemp)"
 
-echo "📦 Wklejam pliki z paczki test 1.4.4.2"
+echo "📦 Wklejam pliki z paczki test 1.4.5.2"
 
 systemctl stop "$SERVICE"
 
 rm -rf "$BASE_DIR/static" "$BASE_DIR/templates" "$BASE_DIR/main.py"
 cd "$BASE_DIR"
 
-curl -sL https://github.com/ur6an/Haier/raw/refs/heads/main/fixV1.4.4.2.tar.gz | tar -xz
+curl -sL https://github.com/ur6an/Haier/raw/refs/heads/main/fixV1.4.5.2.tar.gz | tar -xz
 
 cp "$CONFIG" "${CONFIG}.backup"
 
