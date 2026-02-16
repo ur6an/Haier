@@ -9,7 +9,7 @@ TMP="$(mktemp)"
 echo "📦 Wklejam pliki z paczki test 1.4.5beta2"
 
 systemctl stop "$SERVICE"
-
+ 
 rm -rf "$BASE_DIR/static" "$BASE_DIR/templates" "$BASE_DIR/main.py"
 cd "$BASE_DIR"
 
